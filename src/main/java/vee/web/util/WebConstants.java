@@ -8,7 +8,7 @@ package vee.web.util;
  */
 public interface WebConstants {
 
-     String ACTION_PACKAGE = "io.jushu.web.action.package";
+     String ACTION_PACKAGE = "vee.web.action.package";
 
      String ACTION_CONTAINER = "Action Container";
 
