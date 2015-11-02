@@ -61,11 +61,11 @@ public class ParamMeta {
     public Object resolveValue( RequestContext requestContext, ParamResolverContainer paramResolverContainer ) throws ParamLostException {
 
         if ( canResolveByAnnotated ) {
-            return resolveByAnnotated( requestContext, paramResolverContainer, resolverAnnotation );
+            return optionalCheck( resolveByAnnotated( requestContext, paramResolverContainer, resolverAnnotation ) );
         } else if ( !canResolveByAnnotatedTried && testIsCanResolveByAnnotated( paramResolverContainer ) ) {
             canResolveByAnnotated = true;
             canResolveByAnnotatedTried = true;
-            return resolveByAnnotated( requestContext, paramResolverContainer, resolverAnnotation );
+            return optionalCheck( resolveByAnnotated( requestContext, paramResolverContainer, resolverAnnotation ) );
         }
 
         PreTypeResolver preTypeResolver = paramResolverContainer.getPreTypeResolver( type );
@@ -74,14 +74,15 @@ public class ParamMeta {
         }
 
         Object value = scope.resolveByScope( requestContext, scopeAnnotation, type, paramKey );
-        if ( null == value || typeCompatibility ) {
+        ParamResolver resolver = paramResolverContainer.getParamResolver( paramKey );
+        TypeCaster typeCaster = paramResolverContainer.getTypeCaster( paramKey );
+        if ( null == value || ( null == resolver && null == typeCaster && typeCompatibility ) ) {
             return optionalCheck( value );
         }
 
         if ( scope.isLiteral() ) {
             String raw = (String) value;
 
-            ParamResolver resolver = paramResolverContainer.getParamResolver( paramKey );
             if ( null != resolver ) {
                 value = resolver.resolve( raw );
             } else {
@@ -98,7 +99,6 @@ public class ParamMeta {
             }
         }
 
-        TypeCaster typeCaster = paramResolverContainer.getTypeCaster( paramKey );
         if ( null != typeCaster ) {
             value = typeCaster.cast( value );
         }

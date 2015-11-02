@@ -50,6 +50,7 @@ public final class DefaultParamResolverMgr implements ParamResolverMgr {
     @Override
     public void registerPreTypeResolver( Class<?> type, PreTypeResolver preTypeResolver ) {
         synchronized ( preTypeResolvers ) {
+            if ( null != getInnerParamResolver( type ) ) return;
             if ( preTypeResolvers.containsKey( type ) ) {
                 throw new RegisterException( " pre-defined type resolver for type :" +
                         ( null != type ? type.getName() : "null" ) + " already registered!" );
