@@ -175,6 +175,8 @@ public class DefaultActionInvoker implements ActionInvoker {
                     if ( null != tuple ) {
                         actionAccessCache.put( wholePath, tuple );
                     }
+                } else {
+                    tuple = actionAccessCache.get( wholePath );
                 }
             }
         }
