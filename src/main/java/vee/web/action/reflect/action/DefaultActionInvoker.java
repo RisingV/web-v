@@ -65,12 +65,6 @@ public class DefaultActionInvoker implements ActionInvoker {
     public void invoke( ActionContainer actionContainer, RequestContext context ) {
         String path = context.getPath();
         Tuple<AccessPoint, Object, ResultWriterResolver, Boolean> tuple = getActionAccess( path, actionContainer );
-        //for debug.
-        if ( null == tuple ) {
-            throw new IllegalStateException( "---------------- tuple is null !!!!!" );
-        } else if ( null == tuple.fourth ) {
-            throw new IllegalStateException( "---------------- tuple.fourth is null !!!!!" );
-        }
         if ( tuple.fourth ) {
             syncCall( tuple, context );
         } else {
